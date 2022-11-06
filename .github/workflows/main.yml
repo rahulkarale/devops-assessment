@@ -1,0 +1,23 @@
+name: Run tests
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+
+jobs:
+  run_pub_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      - name: echo workspace
+        run: echo $GITHUB_WORKSPACE
+        shell: bash
+      - name: Run tests
+        run: coverage run test/test_hello.py
+      - name: Tests report
+        run: coverage report
