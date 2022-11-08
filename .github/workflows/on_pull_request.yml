@@ -18,6 +18,6 @@ jobs:
         run: echo $GITHUB_WORKSPACE
         shell: bash
       - name: Run tests
-        run: coverage run test/test_hello.py
+        run: echo "Run test here"
       - name: Tests report
-        run: coverage report
+        run: echo "Display Test Report here"
