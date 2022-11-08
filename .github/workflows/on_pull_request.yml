@@ -1,0 +1,41 @@
+name: Run tests
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+
+jobs:
+  run_pub_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      - name: echo workspace
+        run: echo $GITHUB_WORKSPACE
+        shell: bash
+      - name: Run tests
+        run: echo "Run test here"
+      - name: Tests report
+        run: echo "Display Test Report here"
+  build_and_pub:
+    needs: [run_pub_tests]
+    runs-on: [ubuntu-latest]
+    env:
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      NAME: ${{ secrets.DOCKER_NAME }}
+    steps:
+      - name: Login to docker.io
+        run:  docker login --username ${{ secrets.DOCKER_LOGIN }} --password ${{ secrets.DOCKER_PASSWORD }}
+      - uses: actions/checkout@master
+      - name: Build image
+        run: docker build -t $LOGIN/$NAME:v1.0.0 -f Dockerfile .
+      - name: Push image tag to docker.io
+        run: docker push $LOGIN/$NAME:v1.0.0
+      - name: Tag last release as latest
+        run: docker tag $LOGIN/$NAME:v1.0.0 $LOGIN/$NAME:latest
+      - name: Push image tag latest to docker.io
+        run: docker push $LOGIN/$NAME:latest
