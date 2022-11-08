@@ -34,8 +34,8 @@ jobs:
       - name: Build image
         run: docker build -t $LOGIN/$NAME:v1.0.0 -f Dockerfile .
       - name: Push image tag to docker.io
-        run: docker push $LOGIN/$NAME:${GITHUB_REF:10}
+        run: docker push $LOGIN/$NAME:v1.0.0
       - name: Tag last release as latest
-        run: docker tag $LOGIN/$NAME:${GITHUB_REF:10} $LOGIN/$NAME:latest
+        run: docker tag $LOGIN/$NAME:v1.0.0 $LOGIN/$NAME:latest
       - name: Push image tag latest to docker.io
         run: docker push $LOGIN/$NAME:latest
